@@ -1,0 +1,29 @@
+{
+  "name": "profox-prototype",
+  "version": "0.0.1",
+  "description": "Prototype for creating Provisions-Forderungen with AWS Lambda and AWS Step Functions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saigyo/profox-prototype.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saigyo/profox-prototype/issues"
+  },
+  "homepage": "https://github.com/saigyo/profox-prototype#readme",
+  "devDependencies": {
+    "archiver": "^1.3.0",
+    "bluebird": "^3.5.0",
+    "lodash": "^4.17.4",
+    "serverless": "1.13.2",
+    "serverless-delete-loggroups": "^0.2.0",
+    "serverless-plugin-lambda-dead-letter": "^1.2.1",
+    "serverless-plugin-stage-variables": "git+https://github.com/hypoport/serverless-plugin-stage-variables.git#master",
+    "serverless-verbose-deploy-plugin": "file:serverless-verbose-deploy-plugin"
+  }
+}
