@@ -29,6 +29,11 @@ custom:
   profiles:
     dev: kaixo
     prod: kaixo
+  accountId: your account id
+  domainName: your domain name
+
+plugins:
+  - serverless-step-functions
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -50,18 +55,38 @@ custom:
 #  environment:
 #    variable1: value1
 
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
+package:
+  include:
+    - handler.js
+  exclude:
+    - node_modules/**
 
 functions:
   hello:
     handler: handler.hello
+
+stepFunctions:
+  stateMachines:
+    hello:
+      events:
+        - http:
+            path: hello
+            method: POST
+      definition:
+        StartAt: HelloWorld
+        States:
+          HelloWorld:
+            Type: Task
+            Resource: arn:aws:lambda:${self:provider.region}:${self:custom.accountId}:function:${self:service}-${self:provider.stage}-hello
+            Catch:
+              - ErrorEquals: ["States.TaskFailed"]
+                ResultPath: $.error-info
+                Next: fallback
+            End: true
+          fallback:
+            Type: Pass
+            Result: "Hello, Fallback."
+            End: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -103,3 +128,14 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+resources:
+  Resources:
+    ProfoxAPICustomDomainMapping:
+      Type: AWS::ApiGateway::BasePathMapping
+      Properties:
+        BasePath: profox-${self:provider.stage}
+        DomainName: ${self:custom.domainName}
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Stage: ${self:provider.stage}
