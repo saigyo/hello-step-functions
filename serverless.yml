@@ -23,6 +23,17 @@ provider:
   runtime: nodejs6.10
   stage: ${opt:stage, self:custom.defaultStage}
   profile: ${self:custom.profiles.${self:provider.stage}}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:BatchGetItem
+        - dynamodb:Query
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:${self:custom.accountId}:*"
 
 custom:
   defaultStage: dev
@@ -34,6 +45,7 @@ custom:
 
 plugins:
   - serverless-step-functions
+  - serverless-plugin-include-dependencies
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -57,13 +69,15 @@ plugins:
 
 package:
   include:
-    - handler.js
+    - src/handler/**
   exclude:
     - node_modules/**
 
 functions:
   hello:
-    handler: handler.hello
+    handler: src/handler/hello.handler
+  hello2db:
+    handler: src/handler/hello2db.handler
 
 stepFunctions:
   stateMachines:
@@ -78,10 +92,16 @@ stepFunctions:
           HelloWorld:
             Type: Task
             Resource: arn:aws:lambda:${self:provider.region}:${self:custom.accountId}:function:${self:service}-${self:provider.stage}-hello
+            ResultPath: $.msg
             Catch:
               - ErrorEquals: ["States.TaskFailed"]
                 ResultPath: $.error-info
                 Next: fallback
+            Next: Hello2Db
+          Hello2Db:
+            Type: Task
+            Resource: arn:aws:lambda:${self:provider.region}:${self:custom.accountId}:function:${self:service}-${self:provider.stage}-hello2db
+            ResultPath: $.success
             End: true
           fallback:
             Type: Pass

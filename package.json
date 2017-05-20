@@ -22,8 +22,13 @@
     "lodash": "^4.17.4",
     "serverless": "1.13.2",
     "serverless-delete-loggroups": "^0.2.0",
+    "serverless-plugin-include-dependencies": "^2.1.1",
     "serverless-plugin-lambda-dead-letter": "^1.2.1",
-    "serverless-plugin-stage-variables": "git+https://github.com/hypoport/serverless-plugin-stage-variables.git#master",
     "serverless-step-functions": "^1.0.2"
+  },
+  "dependencies": {
+    "dynamodb-doc": "^1.0.0",
+    "kew": "^0.7.0",
+    "node-datetime": "^1.0.0"
   }
 }
