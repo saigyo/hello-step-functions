@@ -1,7 +1,7 @@
 {
   "name": "profox-prototype",
   "version": "0.0.1",
-  "description": "Prototype for creating Provisions-Forderungen with AWS Lambda and AWS Step Functions.",
+  "description": "Prototype with AWS Lambda and AWS Step Functions.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,7 +23,6 @@
     "serverless": "1.13.2",
     "serverless-delete-loggroups": "^0.2.0",
     "serverless-plugin-lambda-dead-letter": "^1.2.1",
-    "serverless-plugin-stage-variables": "git+https://github.com/hypoport/serverless-plugin-stage-variables.git#master",
-    "serverless-verbose-deploy-plugin": "file:serverless-verbose-deploy-plugin"
+    "serverless-plugin-stage-variables": "git+https://github.com/hypoport/serverless-plugin-stage-variables.git#master"
   }
 }
