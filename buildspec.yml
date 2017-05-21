@@ -7,7 +7,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - ./sls.sh deploy -v
+      - ./sls.sh deploy -v -s $STAGE
   post_build:
     commands:
       - echo Build completed on `date`
