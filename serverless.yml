@@ -34,19 +34,22 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:BatchWriteItem
-      Resource: "arn:aws:dynamodb:${self:provider.region}:${self:custom.accountId}:table/hello"
+      Resource: arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/hello-${self:provider.stage}
 
 custom:
   defaultStage: dev
   profiles:
     dev: kaixo
     prod: kaixo
-  accountId: your account id
-  domainName: your domain name
+  defaultDomainName: ""
+  domainName: ${env:HELLO_DOMAIN, self:custom.defaultDomainName}
+  tableName: hello-${self:provider.stage}
 
 plugins:
   - serverless-step-functions
   - serverless-plugin-include-dependencies
+  - serverless-pseudo-parameters
+  - serverless-enable-api-logs
 
 package:
   include:
@@ -59,14 +62,20 @@ functions:
     handler: src/handler/hello.handler
   hello2db:
     handler: src/handler/hello2db.handler
+    environment:
+      TABLE_NAME: ${self:custom.tableName}
   getHello:
     handler: src/handler/getHelloFromDb.handler
+    environment:
+      TABLE_NAME: ${self:custom.tableName}
     events:
       - http:
           path: hello/{requestId}
           method: GET
   getAllHello:
     handler: src/handler/getAllHelloFromDb.handler
+    environment:
+      TABLE_NAME: ${self:custom.tableName}
     events:
       - http:
           path: hello
@@ -84,7 +93,7 @@ stepFunctions:
         States:
           HelloWorld:
             Type: Task
-            Resource: arn:aws:lambda:${self:provider.region}:${self:custom.accountId}:function:${self:service}-${self:provider.stage}-hello
+            Resource: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-hello
             ResultPath: $.msg
             Catch:
               - ErrorEquals: ["States.TaskFailed"]
@@ -93,7 +102,7 @@ stepFunctions:
             Next: Hello2Db
           Hello2Db:
             Type: Task
-            Resource: arn:aws:lambda:${self:provider.region}:${self:custom.accountId}:function:${self:service}-${self:provider.stage}-hello2db
+            Resource: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-hello2db
             ResultPath: $.success
             End: true
           fallback:
@@ -102,11 +111,14 @@ stepFunctions:
             End: true
 
 resources:
+  Conditions:
+    CreateCustomDomainMapping:
+      Fn::Not: [Fn::Equals: ["${self:custom.domainName}", ""]]
   Resources:
     HelloDynamoDbTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: hello
+        TableName: hello-${self:provider.stage}
         AttributeDefinitions:
           - AttributeName: requestId
             AttributeType: S
@@ -118,6 +130,8 @@ resources:
           WriteCapacityUnits: 5
     HelloAPICustomDomainMapping:
       Type: AWS::ApiGateway::BasePathMapping
+      DependsOn: ApiGatewayStage
+      Condition: CreateCustomDomainMapping
       Properties:
         BasePath: hello-${self:provider.stage}
         DomainName: ${self:custom.domainName}

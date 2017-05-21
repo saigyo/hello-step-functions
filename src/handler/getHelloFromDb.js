@@ -3,6 +3,7 @@
 const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const Q = require('kew');
+const tableName = process.env.TABLE_NAME
 
 module.exports.handler = (event, context, callback) => {
   console.log('Received event:', JSON.stringify(event, null, 2));
@@ -13,7 +14,7 @@ module.exports.handler = (event, context, callback) => {
   function getItem() {
     const defer = Q.defer();
     const params = {
-      TableName: 'hello',
+      TableName: tableName,
       Key: {
         "requestId": {
           S: requestId

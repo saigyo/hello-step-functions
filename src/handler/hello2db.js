@@ -4,6 +4,7 @@ const doc = require('dynamodb-doc');
 const dynamo = new doc.DynamoDB();
 const Q = require('kew');
 const dateTime = require('node-datetime');
+const tableName = process.env.TABLE_NAME
 
 // the following inspired by https://gist.github.com/martimatix/06481e1321ab99bf4a501705235b261f
 module.exports.handler = (event, context, callback) => {
@@ -15,7 +16,7 @@ module.exports.handler = (event, context, callback) => {
   function putItem() {
     const defer = Q.defer();
     const params = {
-      TableName: 'hello',
+      TableName: tableName,
       Item: {
         requestId: context.awsRequestId,
         datetime: now.format('Y-m-d H:M:S'),
