@@ -31,4 +31,4 @@ HELLO_DOMAIN=your.domain.name ./sls.sh deploy -v
 
 ## License
 
-[MIT License](../blob/master/LICENSE)
+[MIT License](../master/LICENSE)
