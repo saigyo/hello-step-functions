@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: profox
+service: hello-sf
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -116,10 +116,10 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-    ProfoxAPICustomDomainMapping:
+    HelloAPICustomDomainMapping:
       Type: AWS::ApiGateway::BasePathMapping
       Properties:
-        BasePath: profox-${self:provider.stage}
+        BasePath: hello-${self:provider.stage}
         DomainName: ${self:custom.domainName}
         RestApiId:
           Ref: ApiGatewayRestApi

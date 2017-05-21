@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/profox-prototype.iml" filepath="$PROJECT_DIR$/.idea/profox-prototype.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/hello-step-functions.iml" filepath="$PROJECT_DIR$/.idea/hello-step-functions.iml" />
     </modules>
   </component>
 </project>
