@@ -39,8 +39,8 @@ provider:
 custom:
   defaultStage: dev
   profiles:
-    dev: kaixo
-    prod: kaixo
+    dev: hello
+    prod: hello
   defaultDomainName: ""
   domainName: ${env:HELLO_DOMAIN, self:custom.defaultDomainName}
   tableName: hello-${self:provider.stage}
