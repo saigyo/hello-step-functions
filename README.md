@@ -9,3 +9,7 @@ with AWS Lambda Functions, API Gateway and DynamoDB.
 npm install
 ./sls deploy -v
 ```
+
+## License
+
+MIT License

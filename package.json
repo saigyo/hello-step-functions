@@ -10,8 +10,8 @@
     "type": "git",
     "url": "https://github.com/saigyo/hello-step-functions.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Markus Ackermann",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/saigyo/hello-step-functions/issues"
   },
